@@ -1,0 +1,37 @@
+pipeline {
+    agent any
+    
+    stages {
+        stage("clone code") {
+            steps {
+                echo "cloning the app" 
+                git url: "https://github.com/AJAKSHAY77/spundan-task-1.git", branch: "main"
+            }
+        }
+        
+        stage("build") {
+            steps {
+                echo "building the app" 
+                sh "docker build -t crud-app ."
+            }
+        }
+        
+        stage("push to docker hub") {
+            steps {
+                withCredentials([usernamePassword(credentialsId:"dockerHub",passwordVariable:"dockerHubPass",usernameVariable:"dockerHubUser")]) {
+                    sh "docker login -u ${env.dockerHubUser} -p ${env.dockerHubPass}"
+                    sh "docker tag crud-app ${env.dockerHubUser}/crud-app:latest"
+                    sh "docker push ${env.dockerHubUser}/crud-app:latest"
+                    echo 'image pushed to docker hub'
+                }
+            }
+        }
+        
+        stage("deploy") {
+            steps {
+                echo "deploying the app"
+                sh "docker-compose down && docker-compose up -d"
+            }
+        }
+    }
+}
