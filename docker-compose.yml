@@ -2,10 +2,7 @@ version: '2.2'
 
 services:
   frontend:
-    container_name: curd-app 
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: akshayjain77/crud-app:latest
     ports: 
       - "4200:80"
 
