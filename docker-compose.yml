@@ -5,7 +5,7 @@ services:
     container_name: curd-app 
     build:
       context: .
-      dockerfile: dockerfile
+      dockerfile: Dockerfile
     ports: 
       - "4200:80"
 
